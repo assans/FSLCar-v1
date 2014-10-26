@@ -1,0 +1,315 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.30.1.7746/W32 for ARM        25/Oct/2014  20:29:47
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  H:\Freescale Code\FSLCar v1\project\MyCar\app\Init.c
+#    Command line =  
+#        "H:\Freescale Code\FSLCar v1\project\MyCar\app\Init.c" -D LPLD_K60
+#        -lCN "H:\Freescale Code\FSLCar v1\project\MyCar\iar\FLASH\List\" -lB
+#        "H:\Freescale Code\FSLCar v1\project\MyCar\iar\FLASH\List\" -o
+#        "H:\Freescale Code\FSLCar v1\project\MyCar\iar\FLASH\Obj\" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M4 -e --fpu=None
+#        --dlib_config "H:\Embedded Workbench
+#        7.0\arm\INC\c\DLib_Config_Normal.h" -I "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\app\" -I "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\CPU\" -I "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\common\" -I "H:\Freescale
+#        Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\LPLD\" -I "H:\Freescale
+#        Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\LPLD\HW\" -I
+#        "H:\Freescale Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\LPLD\DEV\"
+#        -I "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\uCOS-II\Ports\" -I "H:\Freescale
+#        Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\uCOS-II\Source\" -I
+#        "H:\Freescale Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\FatFs\" -I
+#        "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\FatFs\option\" -I "H:\Freescale
+#        Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\USB\common\" -I
+#        "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\USB\driver\" -I "H:\Freescale
+#        Code\FSLCar v1\project\MyCar\iar\..\..\..\lib\USB\descriptor\" -I
+#        "H:\Freescale Code\FSLCar
+#        v1\project\MyCar\iar\..\..\..\lib\USB\class\" -Ol -I "H:\Embedded
+#        Workbench 7.0\arm\CMSIS\Include\" -D ARM_MATH_CM4
+#    List file    =  
+#        H:\Freescale Code\FSLCar v1\project\MyCar\iar\FLASH\List\Init.lst
+#    Object file  =  
+#        H:\Freescale Code\FSLCar v1\project\MyCar\iar\FLASH\Obj\Init.o
+#
+###############################################################################
+
+H:\Freescale Code\FSLCar v1\project\MyCar\app\Init.c
+      1          #include "init.h"
+      2          #include "hw_ftm.h"
+      3          #include "hw_gpio.h"
+      4          #include "hw_adc.h"
+      5          #include "hw_uart.h"
+      6          extern void PIT0_ISR(void);
+
+   \                                 In section .bss, align 4
+      7          ADC_InitTypeDef Init_ADC_Struct;
+   \                     Init_ADC_Struct:
+   \   00000000                      DS8 20
+
+   \                                 In section .bss, align 4
+      8          GPIO_InitTypeDef Init_GPIO_Struct;
+   \                     Init_GPIO_Struct:
+   \   00000000                      DS8 20
+
+   \                                 In section .bss, align 4
+      9          FTM_InitTypeDef Init_FTM_Struct;
+   \                     Init_FTM_Struct:
+   \   00000000                      DS8 28
+
+   \                                 In section .bss, align 4
+     10          PIT_InitTypeDef Init_PIT_Struct;
+   \                     Init_PIT_Struct:
+   \   00000000                      DS8 20
+
+   \                                 In section .bss, align 4
+     11          UART_InitTypeDef Init_UART_Struct;
+   \                     Init_UART_Struct:
+   \   00000000                      DS8 20
+     12          
+
+   \                                 In section .text, align 2, keep-with-next
+     13          void Init_PIT(void)
+     14          {
+   \                     Init_PIT: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     15          	Init_PIT_Struct.PIT_Pitx=PIT0;
+   \   00000002   0x2000             MOVS     R0,#+0
+   \   00000004   0x....             LDR.N    R1,??DataTable2
+   \   00000006   0x7008             STRB     R0,[R1, #+0]
+     16          	Init_PIT_Struct.PIT_PeriodMs=1;
+   \   00000008   0x2001             MOVS     R0,#+1
+   \   0000000A   0x....             LDR.N    R1,??DataTable2
+   \   0000000C   0x6088             STR      R0,[R1, #+8]
+     17          	Init_PIT_Struct.PIT_Isr= PIT0_ISR;
+   \   0000000E   0x....             LDR.N    R0,??DataTable2_1
+   \   00000010   0x....             LDR.N    R1,??DataTable2
+   \   00000012   0x6108             STR      R0,[R1, #+16]
+     18          	LPLD_PIT_Init(Init_PIT_Struct);  //用PIT0来做1MS的中断
+   \   00000014   0x....             LDR.N    R1,??DataTable2
+   \   00000016   0xB084             SUB      SP,SP,#+16
+   \   00000018   0x4668             MOV      R0,SP
+   \   0000001A   0x2214             MOVS     R2,#+20
+   \   0000001C   0x.... 0x....      BL       __aeabi_memcpy4
+   \   00000020   0xBC0F             POP      {R0-R3}
+   \   00000022   0x.... 0x....      BL       LPLD_PIT_Init
+     19          	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
+   \   00000026   0x....             LDR.N    R1,??DataTable2
+   \   00000028   0xB084             SUB      SP,SP,#+16
+   \   0000002A   0x4668             MOV      R0,SP
+   \   0000002C   0x2214             MOVS     R2,#+20
+   \   0000002E   0x.... 0x....      BL       __aeabi_memcpy4
+   \   00000032   0xBC0F             POP      {R0-R3}
+   \   00000034   0x.... 0x....      BL       LPLD_PIT_EnableIrq
+     20          }
+   \   00000038   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+     21          void Init_ADC(void)
+     22          {
+   \                     Init_ADC: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     23          	Init_ADC_Struct.ADC_Adcx=ADC1;
+   \   00000002   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   00000004   0x....             LDR.N    R1,??DataTable2_3
+   \   00000006   0x6008             STR      R0,[R1, #+0]
+     24          	Init_ADC_Struct.ADC_BitMode=SE_12BIT;
+   \   00000008   0x2001             MOVS     R0,#+1
+   \   0000000A   0x....             LDR.N    R1,??DataTable2_3
+   \   0000000C   0x7148             STRB     R0,[R1, #+5]
+     25          	Init_ADC_Struct.ADC_SampleTimeCfg=SAMTIME_SHORT;
+   \   0000000E   0x2000             MOVS     R0,#+0
+   \   00000010   0x....             LDR.N    R1,??DataTable2_3
+   \   00000012   0x7188             STRB     R0,[R1, #+6]
+     26          	Init_ADC_Struct.ADC_HwAvgSel=HW_4AVG;
+   \   00000014   0x2004             MOVS     R0,#+4
+   \   00000016   0x....             LDR.N    R1,??DataTable2_3
+   \   00000018   0x7208             STRB     R0,[R1, #+8]
+     27          	Init_ADC_Struct.ADC_CalEnable=TRUE;
+   \   0000001A   0x2001             MOVS     R0,#+1
+   \   0000001C   0x....             LDR.N    R1,??DataTable2_3
+   \   0000001E   0x72C8             STRB     R0,[R1, #+11]
+     28          	LPLD_ADC_Init(Init_ADC_Struct);
+   \   00000020   0x....             LDR.N    R1,??DataTable2_3
+   \   00000022   0xB084             SUB      SP,SP,#+16
+   \   00000024   0x4668             MOV      R0,SP
+   \   00000026   0x2214             MOVS     R2,#+20
+   \   00000028   0x.... 0x....      BL       __aeabi_memcpy4
+   \   0000002C   0xBC0F             POP      {R0-R3}
+   \   0000002E   0x.... 0x....      BL       LPLD_ADC_Init
+     29          	LPLD_ADC_Chn_Enable(ADC1,AD10);
+   \   00000032   0x210A             MOVS     R1,#+10
+   \   00000034   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   00000036   0x.... 0x....      BL       LPLD_ADC_Chn_Enable
+     30          	LPLD_ADC_Chn_Enable(ADC1,AD11);
+   \   0000003A   0x210B             MOVS     R1,#+11
+   \   0000003C   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   0000003E   0x.... 0x....      BL       LPLD_ADC_Chn_Enable
+     31          	LPLD_ADC_Chn_Enable(ADC1,AD12);
+   \   00000042   0x210C             MOVS     R1,#+12
+   \   00000044   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   00000046   0x.... 0x....      BL       LPLD_ADC_Chn_Enable
+     32          
+     33          	LPLD_ADC_Chn_Enable(ADC1,AD14);
+   \   0000004A   0x210E             MOVS     R1,#+14
+   \   0000004C   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   0000004E   0x.... 0x....      BL       LPLD_ADC_Chn_Enable
+     34          	LPLD_ADC_Chn_Enable(ADC1,AD13);
+   \   00000052   0x210D             MOVS     R1,#+13
+   \   00000054   0x....             LDR.N    R0,??DataTable2_2  ;; 0x400bb000
+   \   00000056   0x.... 0x....      BL       LPLD_ADC_Chn_Enable
+     35          	//开启四个通道的ADC,
+     36          	 //*      |__AD10          --单端(ADC1_SE10--PTB4)  //ACC_X
+     37          	 //*      |__AD11          --单端(ADC1_SE11--PTB5)  //ACC_Y
+     38          	 //*      |__AD12          --单端(ADC1_SE12--PTB6)  //ACC_Z
+     39          
+     40          	 //*      |__AD14          --单端(ADC1_SE14--PTB10) //Gyro
+     41          	 //*      |__AD13          --单端(ADC1_SE15--PTB7) //ANG
+     42          }
+   \   0000005A   0xBD01             POP      {R0,PC}          ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+     43          void Init_GPIO(void)
+     44          {
+   \                     Init_GPIO: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     45          	Init_GPIO_Struct.GPIO_PTx=PTA;
+   \   00000002   0x....             LDR.N    R0,??DataTable2_4  ;; 0x400ff000
+   \   00000004   0x....             LDR.N    R1,??DataTable2_5
+   \   00000006   0x6008             STR      R0,[R1, #+0]
+     46          	Init_GPIO_Struct.GPIO_Dir=DIR_OUTPUT;
+   \   00000008   0x2001             MOVS     R0,#+1
+   \   0000000A   0x....             LDR.N    R1,??DataTable2_5
+   \   0000000C   0x7308             STRB     R0,[R1, #+12]
+     47          	Init_GPIO_Struct.GPIO_Output=OUTPUT_H;
+   \   0000000E   0x2001             MOVS     R0,#+1
+   \   00000010   0x....             LDR.N    R1,??DataTable2_5
+   \   00000012   0x7348             STRB     R0,[R1, #+13]
+     48          	Init_GPIO_Struct.GPIO_Pins=GPIO_Pin17;
+   \   00000014   0xF45F 0x3000      MOVS     R0,#+131072
+   \   00000018   0x....             LDR.N    R1,??DataTable2_5
+   \   0000001A   0x6048             STR      R0,[R1, #+4]
+     49          	LPLD_GPIO_Init(Init_GPIO_Struct);  //初始化LED灯;
+   \   0000001C   0x....             LDR.N    R1,??DataTable2_5
+   \   0000001E   0xB084             SUB      SP,SP,#+16
+   \   00000020   0x4668             MOV      R0,SP
+   \   00000022   0x2214             MOVS     R2,#+20
+   \   00000024   0x.... 0x....      BL       __aeabi_memcpy4
+   \   00000028   0xBC0F             POP      {R0-R3}
+   \   0000002A   0x.... 0x....      BL       LPLD_GPIO_Init
+     50          }
+   \   0000002E   0xBD01             POP      {R0,PC}          ;; return
+     51          
+
+   \                                 In section .text, align 2, keep-with-next
+     52          void CarInit(void)
+     53          {
+   \                     CarInit: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     54          	Init_ADC();
+   \   00000002   0x.... 0x....      BL       Init_ADC
+     55          	Init_PIT();
+   \   00000006   0x.... 0x....      BL       Init_PIT
+     56          	Init_GPIO();
+   \   0000000A   0x.... 0x....      BL       Init_GPIO
+     57          }
+   \   0000000E   0xBD01             POP      {R0,PC}          ;; return
+     58          
+
+   \                                 In section .text, align 2, keep-with-next
+     59          uint8 u32_trans_U8(uint16 data)
+     60          {
+     61            return (uint8)((((uint32)data<<8)-(uint32)data)>>12);
+   \                     u32_trans_U8: (+1)
+   \   00000000   0xB280             UXTH     R0,R0            ;; ZeroExt  R0,R0,#+16,#+16
+   \   00000002   0x0001             MOVS     R1,R0
+   \   00000004   0xB289             UXTH     R1,R1            ;; ZeroExt  R1,R1,#+16,#+16
+   \   00000006   0xEBD1 0x2000      RSBS     R0,R1,R0, LSL #+8
+   \   0000000A   0x0B00             LSRS     R0,R0,#+12
+   \   0000000C   0xB2C0             UXTB     R0,R0            ;; ZeroExt  R0,R0,#+24,#+24
+   \   0000000E   0x4770             BX       LR               ;; return
+     62          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   0x........         DC32     Init_PIT_Struct
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \   00000000   0x........         DC32     PIT0_ISR
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \   00000000   0x400BB000         DC32     0x400bb000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \   00000000   0x........         DC32     Init_ADC_Struct
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \   00000000   0x400FF000         DC32     0x400ff000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \   00000000   0x........         DC32     Init_GPIO_Struct
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   CarInit
+         8   -> Init_ADC
+         8   -> Init_GPIO
+         8   -> Init_PIT
+      24   Init_ADC
+         8   -> LPLD_ADC_Chn_Enable
+         8   -> LPLD_ADC_Init
+        24   -> __aeabi_memcpy4
+      24   Init_GPIO
+         8   -> LPLD_GPIO_Init
+        24   -> __aeabi_memcpy4
+      24   Init_PIT
+         8   -> LPLD_PIT_EnableIrq
+         8   -> LPLD_PIT_Init
+        24   -> __aeabi_memcpy4
+       0   u32_trans_U8
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+      16  CarInit
+      92  Init_ADC
+      20  Init_ADC_Struct
+      28  Init_FTM_Struct
+      48  Init_GPIO
+      20  Init_GPIO_Struct
+      58  Init_PIT
+      20  Init_PIT_Struct
+      20  Init_UART_Struct
+      16  u32_trans_U8
+
+ 
+ 108 bytes in section .bss
+ 254 bytes in section .text
+ 
+ 254 bytes of CODE memory
+ 108 bytes of DATA memory
+
+Errors: none
+Warnings: none
