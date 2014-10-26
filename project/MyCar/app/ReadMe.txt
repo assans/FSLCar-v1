@@ -6,3 +6,5 @@
 	 //*      |__AD13          --µ•∂À(ADC1_SE13--PTB7)  //ANG_GYRO
 	
 ¡„µ„  x=2130 z=2361   gryo=1606
+
+test
