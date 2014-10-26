@@ -34,17 +34,29 @@ Fmt1={W}42:gyro	3	0
 Fmt2={W}42:x	3	0
 Fmt3={W}42:y	3	0
 Fmt4={W}42:z	3	0
-[Trace1]
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
 Enabled=0
-ShowSource=1
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.66.5" 0 0 1 "" 0 "" 0
-Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.66.5" 0 0 1 "" 0 "" 0
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.66.1" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.66.1" 0 0 1 "" 0 "" 0
 Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.66.5" 0 0 1 "" 0 "" 0
 Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.32.2" 0 0 1 "" 0 "" 0
-Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.37.2" 0 0 1 "" 0 "" 0
+Bp4=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.37.1" 0 0 1 "" 0 "" 0
 Bp5=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.37.2" 0 0 1 "" 0 "" 0
 Bp6=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\AngGet.c}.31.2" 0 0 1 "" 0 "" 0
 Bp7=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\app\MyCar.c}.36.1" 0 0 1 "" 0 "" 0
@@ -54,21 +66,6 @@ Bp10=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\Kalman.c}.58.2" 0 0 1 "" 0 "" 0
 Bp11=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\Kalman.c}.57.2" 0 0 1 "" 0 "" 0
 Bp12=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\app\Kalman.c}.60.1" 0 0 1 "" 0 "" 0
 Count=13
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
-[CallStackLog]
-Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=1
-Graph=0
-Symbiont=0
-Exclusions=
