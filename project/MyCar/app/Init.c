@@ -9,6 +9,7 @@ GPIO_InitTypeDef Init_GPIO_Struct;
 FTM_InitTypeDef Init_FTM_Struct;
 PIT_InitTypeDef Init_PIT_Struct;
 UART_InitTypeDef Init_UART_Struct;
+I2C_InitTypeDef Init_I2C_Struct;
 
 void Init_PIT(void)
 {
@@ -18,6 +19,18 @@ void Init_PIT(void)
 	LPLD_PIT_Init(Init_PIT_Struct);  //用PIT0来做1MS的中断
 	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
 }
+
+void Init_I2C(void)
+{
+	Init_I2C_Struct.I2C_I2Cx=I2C0;
+	Init_I2C_Struct.I2C_ICR=0x2b;
+	Init_I2C_Struct.I2C_IntEnable=FALSE;
+	Init_I2C_Struct.I2C_OpenDrainEnable=FALSE;
+//	Init_I2C_Struct.I2C_SclPin=
+//	Init_I2C_Struct.I2C_SdaPin=
+	LPLD_I2C_Init(Init_I2C_Struct);
+}
+
 void Init_ADC(void)
 {
 	Init_ADC_Struct.ADC_Adcx=ADC1;
@@ -54,6 +67,7 @@ void CarInit(void)
 	Init_ADC();
 	Init_PIT();
 	Init_GPIO();
+	Init_I2C();
 }
 
 uint8 u32_trans_U8(uint16 data)

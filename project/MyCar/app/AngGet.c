@@ -39,19 +39,6 @@ void AngleGet(void)
 
 }
 
-//int GyroScopeGetZero(void)
-//{
-//	int temp;
-//	temp=Angle_AD[1]=LPLD_ADC_Get(ADC1,AD14);
-//	return temp;
-//}
-//int GravityGetZero(void)
-//{
-//	int temp;
-//	temp=Angle_AD[0]=LPLD_ADC_Get(ADC1,AD12);
-//	return temp;
-//}
-
 
 //函数说明：将单精度浮点数据转成4字节数据并存入指定地址 //gittest
 //附加说明：用户无需直接操作此函数
