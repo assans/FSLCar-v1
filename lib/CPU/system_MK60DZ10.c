@@ -27,6 +27,8 @@
 #include <stdint.h>
 #include "common.h"
 
+extern void UART5_RxIsr(void);
+
 #define DISABLE_WDOG    1
 
 /*----------------------------------------------------------------------------
@@ -91,7 +93,9 @@ void SystemInit (void) {
   //TERMINAL_BAUD为UART波特率，在k60_card.h中定义
   term_port_structure.UART_Uartx = TERM_PORT;
   term_port_structure.UART_BaudRate = TERMINAL_BAUD;
+  term_port_structure.UART_RxIsr= UART5_RxIsr;
   LPLD_UART_Init(term_port_structure);
+  LPLD_UART_EnableIrq(term_port_structure);   //TBC:我修改过这里 2014年10月28日 21:22:40
   
   //打印系统调试信息
 #ifdef DEBUG_PRINT     

@@ -6,7 +6,7 @@
 //-------------------------------------------------------
 float angle, angle_dot; 		//外部需要引用的变量
 //-------------------------------------------------------
-float Q_angle=0.001, Q_gyro=0.07, R_angle=0.001, dt=0.1;
+float Q_angle=0.025, Q_gyro=0.017, R_angle=0.025, dt=0.06;
 			//注意：dt的取值为kalman滤波器采样时间;
 float P[2][2] = {{ 1, 0 },{ 0, 1 }};
 	
@@ -31,11 +31,9 @@ void Kalman_Filter(float angle_m,float gyro_m)			//gyro_m:gyro_measure
 	P[0][1] += Pdot[1] * dt;
 	P[1][0] += Pdot[2] * dt;
 	P[1][1] += Pdot[3] * dt;
-	
-	
+
 	angle_err = angle_m - angle;//zk-先验估计
-	
-	
+
 	PCt_0 = C_0 * P[0][0];
 	PCt_1 = C_0 * P[1][0];
 	
@@ -51,8 +49,7 @@ void Kalman_Filter(float angle_m,float gyro_m)			//gyro_m:gyro_measure
 	P[0][1] -= K_0 * t_1;
 	P[1][0] -= K_1 * t_0;
 	P[1][1] -= K_1 * t_1;
-	
-	
+
 	angle	+= K_0 * angle_err;//后验估计
 	q_bias	+= K_1 * angle_err;//后验估计
 	angle_dot = gyro_m-q_bias;//输出值（后验估计）的微分 = 角速度

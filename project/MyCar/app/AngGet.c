@@ -46,10 +46,10 @@ void AngleGet(void)
 //buf:待写入数组
 //beg:指定从数组第几个元素开始写入
 //函数无返回
-void Float2Byte(float *target,unsigned char *buf,unsigned char beg)
+void Float2Byte(float *target,int8 *buf,int8 beg)
 {
-    unsigned char *point;
-    point = (unsigned char*)target;	  //得到float的地址
+	int8 *point;
+    point = (int8*)target;	  //得到float的地址
     buf[beg]   = point[0];
     buf[beg+1] = point[1];
     buf[beg+2] = point[2];
