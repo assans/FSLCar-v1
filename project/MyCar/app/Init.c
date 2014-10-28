@@ -25,9 +25,9 @@ void Init_I2C(void)
 	Init_I2C_Struct.I2C_I2Cx=I2C0;
 	Init_I2C_Struct.I2C_ICR=0x2b;
 	Init_I2C_Struct.I2C_IntEnable=FALSE;
-	Init_I2C_Struct.I2C_OpenDrainEnable=FALSE;
-//	Init_I2C_Struct.I2C_SclPin=
-//	Init_I2C_Struct.I2C_SdaPin=
+	Init_I2C_Struct.I2C_OpenDrainEnable=TRUE;
+	Init_I2C_Struct.I2C_SclPin=PTB0;
+	Init_I2C_Struct.I2C_SdaPin=PTB1;
 	LPLD_I2C_Init(Init_I2C_Struct);
 }
 
