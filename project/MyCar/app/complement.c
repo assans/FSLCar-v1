@@ -7,7 +7,7 @@
 static float angle_com,angle_dot_com; 		//外部需要引用的变量
 extern float CarAngle, CarAngSpeed;
 //-------------------------------------------------------
- static float bias_cf;
+static float bias_cf;
 static const float dt=0.05;
 //-------------------------------------------------------
 void complement_filter(float angle_m_cf,float gyro_m_cf)
