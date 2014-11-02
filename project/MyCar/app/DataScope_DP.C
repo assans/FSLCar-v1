@@ -1,7 +1,7 @@
  
 #include "DataScope_DP.h"
- 
-unsigned char DataScope_OutPut_Buffer[42] = {0};	   //串口发送缓冲区
+#include "common.h"
+int8 DataScope_OutPut_Buffer[42] = {0};	   //串口发送缓冲区
 
 
 //函数说明：将单精度浮点数据转成4字节数据并存入指定地址 
@@ -10,10 +10,10 @@ unsigned char DataScope_OutPut_Buffer[42] = {0};	   //串口发送缓冲区
 //buf:待写入数组
 //beg:指定从数组第几个元素开始写入
 //函数无返回 
-void Float2Byte(float *target,unsigned char *buf,unsigned char beg)
+void Float2Bytee(float *target,int8 *buf,unsigned char beg)
 {
-    unsigned char *point;
-    point = (unsigned char*)target;	  //得到float的地址
+	int8 *point;
+    point = (int8*)target;	  //得到float的地址
     buf[beg]   = point[0];
     buf[beg+1] = point[1];
     buf[beg+2] = point[2];
@@ -32,16 +32,16 @@ void DataScope_Get_Channel_Data(float Data,unsigned char Channel)
   {
      switch (Channel)
 		{
-      case 1:  Float2Byte(&Data,DataScope_OutPut_Buffer,1); break;
-      case 2:  Float2Byte(&Data,DataScope_OutPut_Buffer,5); break;
-		  case 3:  Float2Byte(&Data,DataScope_OutPut_Buffer,9); break;
-		  case 4:  Float2Byte(&Data,DataScope_OutPut_Buffer,13); break;
-		  case 5:  Float2Byte(&Data,DataScope_OutPut_Buffer,17); break;
-		  case 6:  Float2Byte(&Data,DataScope_OutPut_Buffer,21); break;
-		  case 7:  Float2Byte(&Data,DataScope_OutPut_Buffer,25); break;
-		  case 8:  Float2Byte(&Data,DataScope_OutPut_Buffer,29); break;
-		  case 9:  Float2Byte(&Data,DataScope_OutPut_Buffer,33); break;
-		  case 10: Float2Byte(&Data,DataScope_OutPut_Buffer,37); break;
+      case 1:  Float2Bytee(&Data,DataScope_OutPut_Buffer,1); break;
+      case 2:  Float2Bytee(&Data,DataScope_OutPut_Buffer,5); break;
+		  case 3:  Float2Bytee(&Data,DataScope_OutPut_Buffer,9); break;
+		  case 4:  Float2Bytee(&Data,DataScope_OutPut_Buffer,13); break;
+		  case 5:  Float2Bytee(&Data,DataScope_OutPut_Buffer,17); break;
+		  case 6:  Float2Bytee(&Data,DataScope_OutPut_Buffer,21); break;
+		  case 7:  Float2Bytee(&Data,DataScope_OutPut_Buffer,25); break;
+		  case 8:  Float2Bytee(&Data,DataScope_OutPut_Buffer,29); break;
+		  case 9:  Float2Bytee(&Data,DataScope_OutPut_Buffer,33); break;
+		  case 10: Float2Bytee(&Data,DataScope_OutPut_Buffer,37); break;
 		}
   }	 
 }

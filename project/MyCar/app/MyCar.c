@@ -4,6 +4,7 @@
 #include "math.h"
 #include "complement.h"
 #include "DEV_MMA8451.h"
+#include "DataScope_DP.h"
 int8 OutPutData[14] = { 0x03, 0xFC, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 0xFC, 0x03 };
 int8 AngData[20]={0x03, 0xFC,0,0,0,0,1,1,1,1,0,0,0,0,3,3,3,3, 0xFC, 0x03 };
 float CarAngle, CarAngSpeed, x_f;
@@ -33,11 +34,20 @@ void main(void)
 //		Short2Byte(&acc_z,OutPutData,6);
 //		Short2Byte(&gyro_1,OutPutData,8);
 //		Short2Byte(&gyro_2,OutPutData,10);
-		Float2Byte(&CarAngle,AngData,2);
-		Float2Byte(&CarAngSpeed,AngData,6);
-		Float2Byte(&GravityAngle,AngData,14);
+
+//		Float2Byte(&CarAngle,AngData,2);
+//		Float2Byte(&CarAngSpeed,AngData,6);
+//		Float2Byte(&GravityAngle,AngData,14);
+
+
 		//LPLD_UART_PutCharArr(UART5, OutPutData, 14);
-		LPLD_UART_PutCharArr(UART5, AngData, 20);
+		//LPLD_UART_PutCharArr(UART5, AngData, 20);
+
+		DataScope_Get_Channel_Data(CarAngle,1);
+		DataScope_Get_Channel_Data(CarAngSpeed,2);
+		DataScope_Get_Channel_Data(GravityAngle,3);
+		i=DataScope_Data_Generate(3);
+		LPLD_UART_PutCharArr(UART5,DataScope_OutPut_Buffer,i);
 	}
 }
 void PIT0_ISR(void)
