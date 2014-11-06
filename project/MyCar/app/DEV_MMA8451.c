@@ -41,7 +41,7 @@ uint8 LPLD_MMA8451_Init(void)
   //初始化MMA8451_I2CX
   i2c_init_param.I2C_I2Cx = I2C0;       //在DEV_MMA8451.h中修改该值
   i2c_init_param.I2C_IntEnable = FALSE;
-  i2c_init_param.I2C_ICR = MMA8451_SCL_100KHZ;  //可根据实际电路更改SCL频率
+  i2c_init_param.I2C_ICR = MMA8451_SCL_300KHZ;  //可根据实际电路更改SCL频率
   i2c_init_param.I2C_SclPin = PTD8;   //在DEV_MMA8451.h中修改该值
   i2c_init_param.I2C_SdaPin = PTD9;   //在DEV_MMA8451.h中修改该值
   i2c_init_param.I2C_Isr = NULL;
@@ -159,7 +159,7 @@ int16 LPLD_MMA8451_GetResult(uint8 Status, uint8 Regs_Addr)
   while(!(ret&Status)) 
   {
     ret = LPLD_MMA8451_ReadReg( MMA8451_REG_STATUS);
-    if(++cnt>500)
+    if(++cnt>100)
       break;
   }
   

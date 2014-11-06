@@ -3,9 +3,8 @@
 #include "complement.h"
 #include "DEV_MMA8451.h"
 
-#define GYROSCOPE_OFFSET 1606
-#define GYROSCOPE_ANGLE_RATIO   0.2// (3300/4096)/(0.67*6) //陀螺仪当前的静态为2360
-extern float CarAngle, CarAngSpeed, x_f;
+#define GYROSCOPE_ANGLE_RATIO   0.1336// (3300/4096)/(0.67*6) //陀螺仪当前的静态为2360  //这个是放大9倍
+extern float CarAngle, CarAngSpeed;
 extern float angle_com, angle_dot_com;
 extern short acc_x, acc_y, acc_z, gyro_1, gyro_2;
 
@@ -34,18 +33,7 @@ void AngleGet(void)
 
 	complement_filter(GravityAngle,-GyroscopeAngleSpeed);
 
-//	mpu_acc_x = MPU6050_GetResult(ACCEL_XOUT_H);
-//	mpu_gyro_y = MPU6050_GetResult(GYRO_YOUT_H);
-//	temp_gyro = (float) mpu_gyro_y / 4.096;
-//	temp_gyro = -temp_gyro;
-//	temp_acc = (float) mpu_acc_x / 4096.0;
-//	if (temp_acc > 1)
-//		temp_acc = 1;
-//	else if (temp_acc < -1)
-//		temp_acc = -1;
-//	G_Ang = asinf(temp_acc) * 57;
-//	Kalman_Filter(G_Ang, temp_gyro);
-//	//my_com(G_Ang,temp_gyro);
+
 
 }
 
