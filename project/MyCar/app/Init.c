@@ -1,21 +1,41 @@
 #include "init.h"
+#include "datastructure.h"
 #include "DEV_MMA8451.h"
-extern void PIT0_ISR(void);
 ADC_InitTypeDef Init_ADC_Struct;
 GPIO_InitTypeDef Init_GPIO_Struct;
 FTM_InitTypeDef Init_FTM_Struct;
 PIT_InitTypeDef Init_PIT_Struct;
 UART_InitTypeDef Init_UART_Struct;
 //I2C_InitTypeDef Init_I2C_Struct;
+DMA_InitTypeDef Init_DMA_Struct;
+unsigned int Count_100us = 0,Count_1Ms=0;
+char Flag_1Ms = 0, Flag_5Ms = 0, Flag_10Ms = 0;
+
+void PIT2_ISR(void)
+{
+	Count_100us++;
+	if(Count_100us==10)
+	{
+		Count_100us=0;
+		Count_1Ms++;
+		Flag_1Ms = 1;
+	}
+	if (Count_1Ms == 10)
+	{
+		Count_1Ms = 0;
+		Flag_10Ms = 1;
+	}
+}
 
 void Init_PIT(void)
 {
-	Init_PIT_Struct.PIT_Pitx = PIT0;
-	Init_PIT_Struct.PIT_PeriodMs = 1;
-	Init_PIT_Struct.PIT_Isr = PIT0_ISR;
+	Init_PIT_Struct.PIT_Pitx = PIT2;
+	Init_PIT_Struct.PIT_PeriodUs =100;
+	Init_PIT_Struct.PIT_Isr = PIT2_ISR;
 	LPLD_PIT_Init(Init_PIT_Struct); //用PIT0来做1MS的中断
 	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
 }
+
 
 //void Init_I2C(void)
 //{
@@ -58,10 +78,42 @@ void CarInit(void)
 	Init_ADC();
 	Init_PIT();
 	Init_GPIO();
+	Init_FTM();
 	whoami = LPLD_MMA8451_Init();
 	//Init_I2C();
 }
+void Init_FTM(void)
+{
+	Init_FTM_Struct.FTM_Ftmx = FTM0;
+	Init_FTM_Struct.FTM_Mode = FTM_MODE_PWM;
+	Init_FTM_Struct.FTM_PwmFreq = 10000;
+	LPLD_FTM_Init(Init_FTM_Struct);
+	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch4, 0, PTD4, ALIGN_LEFT); //左边电机正转
+	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch5, 0, PTD5, ALIGN_LEFT); //左边电机反转
+	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch6, 0, PTD6, ALIGN_LEFT); //右边电机正转
+	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch7, 0, PTD7, ALIGN_LEFT); //右边电机反转
 
+}
+
+//void Init_DMA_UART5(unsigned char num,int8* datap)
+//{
+//	Init_DMA_Struct.DMA_CHx=DMA_CH0;
+//	Init_DMA_Struct.DMA_Req=UART5_TRAN_DMAREQ;
+//	Init_DMA_Struct.DMA_MajorLoopCnt=1;//传送一次
+//	Init_DMA_Struct.DMA_MinorByteCnt=num;//一次发送多少个字节
+//	Init_DMA_Struct.DMA_SourceAddr=(uint32)datap;//数据源的地址
+//	Init_DMA_Struct.DMA_SourceDataSize=DMA_SRC_8BIT;
+//	Init_DMA_Struct.DMA_SourceAddrOffset=1;//每次传输偏移一个字节
+//	Init_DMA_Struct.DMA_LastSourceAddrAdj= -num;
+//	Init_DMA_Struct.DMA_DestAddr=(uint32)&UART5->D;
+//	Init_DMA_Struct.DMA_DestAddrOffset=0;  //发送一个数据以后的偏移
+//	Init_DMA_Struct.DMA_DestDataSize=DMA_DST_8BIT;
+//	Init_DMA_Struct.DMA_LastDestAddrAdj=0; //调整发送结束后的偏移
+//	Init_DMA_Struct.DMA_AutoDisableReq=TRUE;
+//	LPLD_DMA_Init(Init_DMA_Struct);
+//	LPLD_DMA_EnableIrq(Init_DMA_Struct);
+//
+//}
 uint8 u32_trans_U8(uint16 data)
 {
 	return (uint8) ((((uint32) data << 8) - (uint32) data) >> 12);

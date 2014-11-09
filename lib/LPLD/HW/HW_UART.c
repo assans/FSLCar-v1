@@ -280,13 +280,14 @@ int32 LPLD_UART_GetChar_Present(UART_Type *uartx)
  *    无
  *
  */
-void LPLD_UART_PutChar(UART_Type *uartx, int8 ch)
+void LPLD_UART_PutChar(UART_Type *uartx, uint8 ch)
 {
   //等待FIFO准备就绪
   while(!(uartx->S1 & UART_S1_TDRE_MASK));
   
   //将要发送的1个字节发给UART数据寄存器
-  uartx->D = (uint8)ch;
+ // uartx->D = (uint8)ch;
+  uartx->D = ch;
 }
 
 
@@ -309,7 +310,7 @@ void LPLD_UART_PutChar(UART_Type *uartx, int8 ch)
  *    无
  *
  */
-void LPLD_UART_PutCharArr(UART_Type *uartx, int8 *ch, int32 len)
+void LPLD_UART_PutCharArr(UART_Type *uartx, uint8 *ch, int32 len)
 {
   while(len--)
   {

@@ -130,9 +130,9 @@ int8 LPLD_UART_GetChar(UART_Type *);
 //检查是否接收到字符
 int32 LPLD_UART_GetChar_Present(UART_Type *);
 //UART发送一个字符
-void LPLD_UART_PutChar(UART_Type *, int8);
+void LPLD_UART_PutChar(UART_Type *, uint8);
 //UART发送字符数组
-void LPLD_UART_PutCharArr(UART_Type *, int8*, int32);
+void LPLD_UART_PutCharArr(UART_Type *, uint8*, int32);
 //UART中断使能
 void LPLD_UART_EnableIrq(UART_InitTypeDef);
 //UART中断禁用
