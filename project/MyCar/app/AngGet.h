@@ -10,7 +10,7 @@ void AngleGet(void);
 //int GravityGetZero(void);
 void Float2Byte(float *target,uint8 *buf,uint8 beg);
 void Short2Byte(int16 *target, int8 *buf, int8 beg);
-void AngleControlValueCalc(void);
-void MotorControl_Out(void);
+//void AngleControlValueCalc(void);
+
 
 #endif
