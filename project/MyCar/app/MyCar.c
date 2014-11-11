@@ -7,6 +7,7 @@
 #include "debug.h"
 #include "datastructure.h"
 #include "Control.h"
+#include "CCD.h"
 //#include "DataScope_DP.h"
 
 CarInfo_TypeDef CarInfo_Now;
@@ -19,7 +20,8 @@ extern float GravityAngle;
 extern char Flag_1Ms, Flag_5Ms, Flag_10Ms;
 //--控制区
 #define Debug
-
+#define CCDOn //开启或者关闭CCD
+#define CCDSendImage //控制要不要发送CCD的图像
 //控制区结束
 void main(void)
 {
@@ -41,21 +43,28 @@ void main(void)
 			AngleGet();
 			AngleControlValueCalc();
 			MotorControl_Out(); //输出电机控制的值
-
-//			DataScope_Get_Channel_Data(CarInfo_Now.CarAngle, 1);
-//			DataScope_Get_Channel_Data(CarInfo_Now.CarAngSpeed, 2);
-//			DataScope_Get_Channel_Data(GravityAngle, 3);
-//			i = DataScope_Data_Generate(3);
-//			LPLD_UART_PutCharArr(UART5, DataScope_OutPut_Buffer, i);
 			Float2Byte(&CarInfo_Now.CarAngle, OUTDATA, 2);
 			Float2Byte(&CarInfo_Now.CarAngSpeed, OUTDATA, 10);
 			Float2Byte(&GravityAngle, OUTDATA, 6);
 			LPLD_UART_PutCharArr(UART5, OUTDATA, 16);
-
-			//LPLD_SYSTICK_DelayMs(10);
-			Flag_10Ms = Flag_10Ms;
-
 		}
+#ifdef	CCDOn
+		if (TimerFlag20ms == 1)
+		{
+			TimerFlag20ms = 0;
+			ccd_carry(ccd_array);
+			CalculateIntegrationTime();
+#ifdef CCDSendImage
+			if (++send_data >= 5)
+			{
+				send_data = 0;
+				//ccd_threshold(ccd_array);
+				SendImageData(ccd_array);
+			}
+#endif
+		}
+#endif
+
 	}
 }
 

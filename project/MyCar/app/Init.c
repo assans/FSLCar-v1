@@ -2,21 +2,24 @@
 #include "datastructure.h"
 #include "DEV_MMA8451.h"
 ADC_InitTypeDef Init_ADC_Struct;
+ADC_InitTypeDef Init_ADC_CCD_Struct;
 GPIO_InitTypeDef Init_GPIO_Struct;
 FTM_InitTypeDef Init_FTM_Struct;
 PIT_InitTypeDef Init_PIT_Struct;
 UART_InitTypeDef Init_UART_Struct;
 //I2C_InitTypeDef Init_I2C_Struct;
 DMA_InitTypeDef Init_DMA_Struct;
-unsigned int Count_100us = 0,Count_1Ms=0;
+unsigned int Count_100us = 0, Count_1Ms = 0;
 char Flag_1Ms = 0, Flag_5Ms = 0, Flag_10Ms = 0;
+
+extern void ccd_exposure(void);
 
 void PIT2_ISR(void)
 {
 	Count_100us++;
-	if(Count_100us==10)
+	if (Count_100us == 10)
 	{
-		Count_100us=0;
+		Count_100us = 0;
 		Count_1Ms++;
 		Flag_1Ms = 1;
 	}
@@ -30,12 +33,17 @@ void PIT2_ISR(void)
 void Init_PIT(void)
 {
 	Init_PIT_Struct.PIT_Pitx = PIT2;
-	Init_PIT_Struct.PIT_PeriodUs =100;
+	Init_PIT_Struct.PIT_PeriodUs = 100;
 	Init_PIT_Struct.PIT_Isr = PIT2_ISR;
 	LPLD_PIT_Init(Init_PIT_Struct); //用PIT0来做1MS的中断
 	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
-}
 
+	Init_PIT_Struct.PIT_Pitx=PIT1;
+	Init_PIT_Struct.PIT_PeriodMs=1;
+	Init_PIT_Struct.PIT_Isr=ccd_exposure;
+	LPLD_PIT_Init(Init_PIT_Struct);
+	LPLD_PIT_EnableIrq(Init_PIT_Struct); //CCD的毫秒定时器
+}
 
 //void Init_I2C(void)
 //{
@@ -62,6 +70,11 @@ void Init_ADC(void)
 
 //	 *      |__AD14          --单端(ADC1_SE14--PTB10)  //Gyro_1
 //	 *      |__AD15          --单端(ADC1_SE15--PTB11) //Gyro_2
+	//LPLD_ADC_Chn_Enable(ADC1,AD12);//线性CCD的AD端口
+	Init_ADC_CCD_Struct.ADC_Adcx = ADC0;
+	Init_ADC_CCD_Struct.ADC_BitMode = SE_12BIT;
+	LPLD_ADC_Init(Init_ADC_CCD_Struct);
+	LPLD_ADC_Chn_Enable(ADC0, AD8); //CCD的AD端口 PTB0
 }
 void Init_GPIO(void)
 {
@@ -70,6 +83,18 @@ void Init_GPIO(void)
 	Init_GPIO_Struct.GPIO_Output = OUTPUT_H;
 	Init_GPIO_Struct.GPIO_Pins = GPIO_Pin17;
 	LPLD_GPIO_Init(Init_GPIO_Struct); //初始化LED灯;
+
+	Init_GPIO_Struct.GPIO_PTx = PTA;
+	Init_GPIO_Struct.GPIO_Pins = GPIO_Pin28;
+	Init_GPIO_Struct.GPIO_Dir = DIR_OUTPUT;
+	Init_GPIO_Struct.GPIO_Output = OUTPUT_H;
+	LPLD_GPIO_Init(Init_GPIO_Struct); //这两个端口是CCD的SI和CLK
+
+	Init_GPIO_Struct.GPIO_PTx = PTA;
+	Init_GPIO_Struct.GPIO_Pins = GPIO_Pin29;
+	Init_GPIO_Struct.GPIO_Dir = DIR_OUTPUT;
+	Init_GPIO_Struct.GPIO_Output = OUTPUT_H;
+	LPLD_GPIO_Init(Init_GPIO_Struct);
 }
 
 void CarInit(void)
@@ -114,7 +139,4 @@ void Init_FTM(void)
 //	LPLD_DMA_EnableIrq(Init_DMA_Struct);
 //
 //}
-uint8 u32_trans_U8(uint16 data)
-{
-	return (uint8) ((((uint32) data << 8) - (uint32) data) >> 12);
-}
+

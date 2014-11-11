@@ -3,12 +3,15 @@
 					PIT0-作为程序时间片控制
 					ADC1-采集陀螺仪的数据 
 					IIC0-MMA8451
+					ADC0-CCD
 
 占用的端口:	USART5 	PTE8-PTE9;
 			FTM0   	PTD4,PTD5,PTD6,PTD7;
 			LED		PTA17;
 			ADC1	PTB10,PTB11
 			IIC0	PTD8,PTD9;
+			ADC0	PTB0//CCD的AD
+			CCD		PTA28-CCD的SI,PTA29-CCD的CLK
 			
 			
 需要调试的参数:	Debug.c:		Ang_PID.Proportion	//比例
@@ -31,4 +34,6 @@
 2014年11月9日 15:15:11  DMA配置不成功,发送时间需要1MS,直接发送,
 
 2014年11月11日 13:05:16	改用了卡尔曼滤波,角速度收敛有点慢
+
+2014年11月11日 23:37:26	更新了CCD的代码,暂时没有写黑线识别的代码
 					   
