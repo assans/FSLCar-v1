@@ -118,6 +118,15 @@ void Init_FTM(void)
 	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch6, 0, PTD6, ALIGN_LEFT); //右边电机正转
 	LPLD_FTM_PWM_Enable(FTM0, FTM_Ch7, 0, PTD7, ALIGN_LEFT); //右边电机反转
 
+	Init_FTM_Struct.FTM_Ftmx=FTM1;
+	Init_FTM_Struct.FTM_Mode= FTM_MODE_QD;
+	Init_FTM_Struct.FTM_QdMode=QD_MODE_PHAB;
+	LPLD_FTM_Init(Init_FTM_Struct);
+
+	Init_FTM_Struct.FTM_Ftmx=FTM2;
+	Init_FTM_Struct.FTM_Mode= FTM_MODE_QD;
+	Init_FTM_Struct.FTM_QdMode=QD_MODE_PHAB;
+	LPLD_FTM_Init(Init_FTM_Struct);
 }
 
 //void Init_DMA_UART5(unsigned char num,int8* datap)

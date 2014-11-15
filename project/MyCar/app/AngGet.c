@@ -7,7 +7,6 @@
 #define GYROSCOPE_ANGLE_RATIO   0.1336// (3300/4096)/(0.67*6) //陀螺仪当前的静态为2360  //这个是放大9倍
 /*各项输出限幅*/
 
-
 extern CarInfo_TypeDef CarInfo_Now; //当前车子的信息
 extern CarControl_TypeDef MotorControl; //电机控制的值
 extern float angle_com, angle_dot_com;
@@ -40,23 +39,10 @@ void AngleGet(void)
 //	complement_filter(GravityAngle, -GyroscopeAngleSpeed);
 //	CarInfo_Now.CarAngle = angle_com;
 //	CarInfo_Now.CarAngSpeed = angle_dot_com;
-	Kalman_Filter(GravityAngle,-GyroscopeAngleSpeed);
-	CarInfo_Now.CarAngSpeed=angle_dot;
-	CarInfo_Now.CarAngle=angle;
+	Kalman_Filter(GravityAngle, -GyroscopeAngleSpeed);
+	CarInfo_Now.CarAngSpeed = angle_dot;
+	CarInfo_Now.CarAngle = angle;
 
-}
-
-
-
-
-int IncPIDCalc(int NextPoint)
-{
-//	int iIncPID;
-//	iError=Ang_PID.SetPoint-NextPoint; //需要将角度换算成电机的PWM
-//	iIncPID=(int)((Ang_PID.Proportion*iError-Ang_PID.Integral*Ang_PID.LastError+Ang_PID.Derivative*Ang_PID.PrevError));
-//	Ang_PID.PrevError=Ang_PID.LastError;
-//	Ang_PID.LastError=iError;
-//	return(iIncPID);
 }
 
 //函数说明：将单精度浮点数据转成4字节数据并存入指定地址 //gittest
@@ -65,14 +51,23 @@ int IncPIDCalc(int NextPoint)
 //buf:待写入数组
 //beg:指定从数组第几个元素开始写入
 //函数无返回
-void Float2Byte(float *target,unsigned char *buf,unsigned char beg)
+void Float2Byte(float *target, unsigned char *buf, unsigned char beg)
 {
-    unsigned char *point;
-    point = (unsigned char*)target;	  //得到float的地址
-    buf[beg]   = point[0];
-    buf[beg+1] = point[1];
-    buf[beg+2] = point[2];
-    buf[beg+3] = point[3];
+	unsigned char *point;
+	point = (unsigned char*) target; //得到float的地址
+	buf[beg] = point[0];
+	buf[beg + 1] = point[1];
+	buf[beg + 2] = point[2];
+	buf[beg + 3] = point[3];
+}
+void Byte2Float(float *target,unsigned char *buf, unsigned char beg)
+{
+	unsigned char *point;
+	point = (unsigned char*) target; //得到float的地址
+	point[0] = buf[beg];
+	point[1] = buf[beg + 1];
+	point[2] = buf[beg + 2];
+	point[3] = buf[beg + 3];
 }
 
 void Short2Byte(int16 *target, int8 *buf, int8 beg)

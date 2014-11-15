@@ -15,18 +15,24 @@ CarControl_TypeDef MotorControl; //存储电机控制的值
 short acc_x, acc_y, acc_z, gyro_1, gyro_2;
 int gyro_avg = 2360; //角速度AD平均值
 uint8 OUTDATA[16] =
-		{ 0x03, 0xfc, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0xfc, 0x03 };
-extern float GravityAngle;
-extern char Flag_1Ms, Flag_5Ms, Flag_10Ms;
+		{ 0x03, 0xfc, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 0xfc, 0x03 }; //示波器
+extern float GravityAngle; //重力角
+extern char Flag_1Ms, Flag_5Ms, Flag_10Ms; //时间片标志
 //--控制区
 #define Debug
 #define CCDOn //开启或者关闭CCD
 #define CCDSendImage //控制要不要发送CCD的图像
+#define AngleCale//姿态解算
 //控制区结束
+
+unsigned char testbyte[4];
 void main(void)
 {
 	Struct_Init(); //初始各种结构体的值
 	CarInit();
+	LPLD_Flash_Init(); //初始化EEPROM,所有的初始化数据保存在EEPROM的第60个扇区
+//	Flash_WriteTest(); 测试flash区
+
 #ifdef Debug
 	Debug_Timer_Init();
 #endif
@@ -40,6 +46,7 @@ void main(void)
 			Debug_Timer_ReSet();
 #endif
 			LPLD_GPIO_Toggle_b(PTA, 17);
+#ifdef AngleCale
 			AngleGet();
 			AngleControlValueCalc();
 			MotorControl_Out(); //输出电机控制的值
@@ -47,6 +54,7 @@ void main(void)
 			Float2Byte(&CarInfo_Now.CarAngSpeed, OUTDATA, 10);
 			Float2Byte(&GravityAngle, OUTDATA, 6);
 			LPLD_UART_PutCharArr(UART5, OUTDATA, 16);
+#endif
 		}
 #ifdef	CCDOn
 		if (TimerFlag20ms == 1)
@@ -59,7 +67,7 @@ void main(void)
 			{
 				send_data = 0;
 				//ccd_threshold(ccd_array);
-				SendImageData(ccd_array);
+				//SendImageData(ccd_array);发送需要接近10Ms的时间,有点久了
 			}
 #endif
 		}

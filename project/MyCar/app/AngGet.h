@@ -6,6 +6,7 @@
 
 
 void AngleGet(void);
+void Byte2Float(float *target,unsigned char *buf, unsigned char beg);
 //int GyroScopeGetZero(void);
 //int GravityGetZero(void);
 void Float2Byte(float *target,uint8 *buf,uint8 beg);
