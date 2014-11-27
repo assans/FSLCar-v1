@@ -126,7 +126,7 @@ typedef struct
 //初始化UART通道、波特率、发送接收引脚
 void LPLD_UART_Init(UART_InitTypeDef);
 //UART获取一个字符
-int8 LPLD_UART_GetChar(UART_Type *);
+uint8 LPLD_UART_GetChar(UART_Type *);
 //检查是否接收到字符
 int32 LPLD_UART_GetChar_Present(UART_Type *);
 //UART发送一个字符

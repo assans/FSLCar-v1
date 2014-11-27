@@ -2,10 +2,12 @@
 #include "common.h"
 #include "AngGet.h"
 
-
-uint8 ReadBuffer[DATA_SIZE];
-uint8 WriteBuffer[DATA_SIZE];
-float Flash_DataBuffer[NumOfFloat];//存放读取出来的数据
+extern IncPID_InitTypeDef Ang_PID;
+extern float AngToMotorRatio;
+uint8 FlashReadBuffer[20]={0x01,0x01};
+uint8 FlashWriteBuffer[20]={0x01,0x01};
+float FlashFloatBuffer[5]={0x01,0x01};//存放读取出来的数据
+int FlashIntBuffer[5]={0x01,0x01};
 
 void delay();
 void Flash_ReadAllData(void)
@@ -15,13 +17,17 @@ void Flash_ReadAllData(void)
 	ptr = (uint8*) FLASH_ADDR;
 	for (len = 0; len <= DATA_SIZE; len++)
 	{
-		ReadBuffer[len] = *(ptr + len);
-		WriteBuffer[len] = ReadBuffer[len]; //将读出来的数据放到写入buffer里面,防止在未对writebuffer初始化的情况下写入
+		FlashReadBuffer[len] = *(ptr + len);
+		FlashWriteBuffer[len] = FlashReadBuffer[len]; //将读出来的数据放到写入buffer里面,防止在未对FlashWriteBuffer初始化的情况下写入
 	}
 	for(len=0;len<=NumOfFloat;len++)
 	{
-		Byte2Float(Flash_DataBuffer+len,ReadBuffer,len*4); //需要测试这段代码是否正常
+		Byte2Float(&FlashFloatBuffer[len],FlashReadBuffer,len*4); 
 	}
+	Ang_PID.AngSet=FlashFloatBuffer[0];
+	Ang_PID.Proportion=FlashFloatBuffer[1];
+	Ang_PID.Derivative=FlashFloatBuffer[2];
+	AngToMotorRatio=FlashFloatBuffer[3];
 }
 void Flash_WriteAllData(void)
 {
@@ -32,13 +38,18 @@ void Flash_WriteAllData(void)
     delay();
 
     DisableInterrupts;
-    result=LPLD_Flash_ByteProgram((uint32)FLASH_ADDR, (uint32*)WriteBuffer, DATA_SIZE);
+    Flash_DataToBuffer(FlashFloatBuffer[0],0);
+    Flash_DataToBuffer(FlashFloatBuffer[1],1);
+    Flash_DataToBuffer(FlashFloatBuffer[2],2);
+    Flash_DataToBuffer(FlashFloatBuffer[3],3);
+    result=LPLD_Flash_ByteProgram((uint32)FLASH_ADDR, (uint32*)FlashWriteBuffer, DATA_SIZE);
+     delay();
     EnableInterrupts;
     delay();
 
     if(result==FLASH_OK)
     {
-    	//这里写返回给调试器的指令
+    	LPLD_UART_PutChar(UART5,0xfb);
     }
     else
     {
@@ -51,7 +62,7 @@ void Flash_DataToBuffer(float data,uint8 num)//num为第n个数据
 	temp=DATA_SIZE/4;
 	if(num<=temp)
 	{
-	Float2Byte(&data,WriteBuffer,num*4);
+	Float2Byte(&data,FlashWriteBuffer,num*4);
 	}
 }
 void Flash_WriteTest(void)
@@ -59,11 +70,11 @@ void Flash_WriteTest(void)
 	uint8 i;
 	for(i=0;i<DATA_SIZE;i++)
 	{
-		WriteBuffer[i]=i;
+		FlashWriteBuffer[i]=i;
 	}
 	Flash_WriteAllData();
 	Flash_ReadAllData();
-	LPLD_UART_PutCharArr(UART5,ReadBuffer,DATA_SIZE);
+	LPLD_UART_PutCharArr(UART5,FlashReadBuffer,DATA_SIZE);
 }
 
 void delay()

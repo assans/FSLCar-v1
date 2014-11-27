@@ -6,9 +6,11 @@
 #define DATA_SIZE	NumOfFloat*4
 #define FLASH_SECTOR   (60)
 #define FLASH_ADDR     (FLASH_SECTOR*2048)
-extern uint8 ReadBuffer[DATA_SIZE];
-extern uint8 WriteBuffer[DATA_SIZE];
-extern float Flash_DataBuffer[NumOfFloat];
+#define NumOfInt	5
+extern uint8 FlashReadBuffer[DATA_SIZE];
+extern uint8 FlashWriteBuffer[DATA_SIZE];
+extern float FlashFloatBuffer[NumOfFloat];
+extern int FlashIntBuffer[NumOfInt];
 
 typedef struct
 {
@@ -47,6 +49,15 @@ typedef struct
 	float Speed_RightOutValut;
 	float Speed_LeftOutValue;
 } TempOfMotor_TypeDef;
+
+typedef struct
+{
+	float AngToMotorRatio;
+	float AngSet; //设定的角度
+	float AngSpeedSet; //设定的角速度;
+	float Proportion; //比例常数
+	float Derivative; //微分常数;
+}AngDataStruct; //第一页需要发送的数据
 
 void Flash_WriteTest(void);
 void Flash_DataToBuffer(float data,uint8 num);

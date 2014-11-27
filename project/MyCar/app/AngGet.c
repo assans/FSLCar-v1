@@ -5,7 +5,6 @@
 #include "datastructure.h"
 #include "Kalman.h"
 #define GYROSCOPE_ANGLE_RATIO   0.1336// (3300/4096)/(0.67*6) //陀螺仪当前的静态为2360  //这个是放大9倍
-/*各项输出限幅*/
 
 extern CarInfo_TypeDef CarInfo_Now; //当前车子的信息
 extern CarControl_TypeDef MotorControl; //电机控制的值
@@ -17,6 +16,7 @@ IncPID_InitTypeDef Ang_PID; //角度控制的PID结构体
 TempOfMotor_TypeDef TempValue; //临时存储角度和速度控制浮点变量的结构体
 float GravityAngle, GyroscopeAngleSpeed;
 float temp_x;
+int gyro_avg = 2360; //角速度AD平均值
 
 void AngleGet(void)
 {
@@ -76,4 +76,24 @@ void Short2Byte(int16 *target, int8 *buf, int8 beg)
 	point = (int8*) target;
 	buf[beg] = point[0];
 	buf[beg + 1] = point[1];
+}
+
+void Byte2Int(int *target, unsigned char *buf, unsigned char beg)
+{
+	unsigned char *point;
+	point = (unsigned char*) target; //得到float的地址
+	point[0] = buf[beg];
+	point[1] = buf[beg + 1];
+	point[2] = buf[beg + 2];
+	point[3] = buf[beg + 3];
+}
+
+void Int2Byte(int *target, unsigned char *buf, unsigned char beg)
+{
+	unsigned char *point;
+	point = (unsigned char*) target; //得到float的地址
+	buf[beg] = point[0];
+	buf[beg + 1] = point[1];
+	buf[beg + 2] = point[2];
+	buf[beg + 3] = point[3];
 }

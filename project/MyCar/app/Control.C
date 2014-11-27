@@ -1,6 +1,6 @@
 #include "Control.h"
 
-#define AngToMotorRatio 300  //角度转换成电机控制的比例因子..我也不知道取多少合适..以后再调试
+float AngToMotorRatio=300;//角度转换成电机控制的比例因子..我也不知道取多少合适..以后再调试
 #define MOTOR_OUT_MAX       10000
 #define MOTOR_OUT_MIN       -10000
 #define ANGLE_CONTROL_OUT_MAX			MOTOR_OUT_MAX
@@ -15,11 +15,9 @@ void AngleControlValueCalc(void)
 {
 	float ControlValue;
 	Ang_PID.Delta = Ang_PID.AngSet - CarInfo_Now.CarAngle; //当前误差//这里全是角度,值很小
-	ControlValue = Ang_PID.Delta * Ang_PID.Proportion   //比例项
-			- Ang_PID.Integral * Ang_PID.LastError		//积分项
-			+ Ang_PID.Derivative * Ang_PID.PrevError; //微分项
-	Ang_PID.PrevError = Ang_PID.LastError;
-	Ang_PID.LastError = Ang_PID.Delta; //PID的三步
+	ControlValue = Ang_PID.Delta * Ang_PID.Proportion +CarInfo_Now.CarAngSpeed* Ang_PID.PrevError; //微分项
+//	Ang_PID.PrevError = Ang_PID.LastError;
+//	Ang_PID.LastError = Ang_PID.Delta; //PID的三步
 	ControlValue *= AngToMotorRatio; //乘上比例因子将角度转换成PWM的占空比
 	if (ControlValue > ANGLE_CONTROL_OUT_MAX)
 		ControlValue = ANGLE_CONTROL_OUT_MAX;

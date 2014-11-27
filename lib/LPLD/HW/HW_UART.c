@@ -230,7 +230,7 @@ void LPLD_UART_Init(UART_InitTypeDef uart_init_structure)
  *    串口接收的1个字节
  *
  */
-int8 LPLD_UART_GetChar(UART_Type *uartx)
+uint8 LPLD_UART_GetChar(UART_Type *uartx)
 {
   //等待数据接收
   while (!(uartx->S1 & UART_S1_RDRF_MASK));

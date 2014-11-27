@@ -13,6 +13,7 @@ unsigned int Count_100us = 0, Count_1Ms = 0;
 char Flag_1Ms = 0, Flag_5Ms = 0, Flag_10Ms = 0;
 
 extern void ccd_exposure(void);
+extern void UART5_RxIsr(void);
 
 void PIT2_ISR(void)
 {
@@ -128,6 +129,7 @@ void Init_FTM(void)
 	Init_FTM_Struct.FTM_QdMode=QD_MODE_PHAB;
 	LPLD_FTM_Init(Init_FTM_Struct);
 }
+
 
 //void Init_DMA_UART5(unsigned char num,int8* datap)
 //{
