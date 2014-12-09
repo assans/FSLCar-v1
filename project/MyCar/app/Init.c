@@ -9,35 +9,33 @@ PIT_InitTypeDef Init_PIT_Struct;
 UART_InitTypeDef Init_UART_Struct;
 //I2C_InitTypeDef Init_I2C_Struct;
 DMA_InitTypeDef Init_DMA_Struct;
-unsigned int Count_100us = 0, Count_1Ms = 0;
-char Flag_1Ms = 0, Flag_5Ms = 0, Flag_10Ms = 0;
 
 extern void ccd_exposure(void);
 extern void UART5_RxIsr(void);
 
-void PIT2_ISR(void)
-{
-	Count_100us++;
-	if (Count_100us == 10)
-	{
-		Count_100us = 0;
-		Count_1Ms++;
-		Flag_1Ms = 1;
-	}
-	if (Count_1Ms == 10)
-	{
-		Count_1Ms = 0;
-		Flag_10Ms = 1;
-	}
-}
+// void PIT2_ISR(void)
+// {
+// 	Count_100us++;
+// 	if (Count_100us == 10)
+// 	{
+// 		Count_100us = 0;
+// 		Count_1Ms++;
+// 		Flag_1Ms = 1;
+// 	}
+// 	if (Count_1Ms == 10)
+// 	{
+// 		Count_1Ms = 0;
+// 		Flag_10Ms = 1;
+// 	}
+// }
 
 void Init_PIT(void)
 {
-	Init_PIT_Struct.PIT_Pitx = PIT2;
-	Init_PIT_Struct.PIT_PeriodUs = 100;
-	Init_PIT_Struct.PIT_Isr = PIT2_ISR;
-	LPLD_PIT_Init(Init_PIT_Struct); //用PIT0来做1MS的中断
-	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
+// 	Init_PIT_Struct.PIT_Pitx = PIT2;
+// 	Init_PIT_Struct.PIT_PeriodUs = 100;
+// 	Init_PIT_Struct.PIT_Isr = PIT2_ISR;
+// 	LPLD_PIT_Init(Init_PIT_Struct); //用PIT0来做1MS的中断
+// 	LPLD_PIT_EnableIrq(Init_PIT_Struct); //开启PIT0的中断
 
 	Init_PIT_Struct.PIT_Pitx=PIT1;
 	Init_PIT_Struct.PIT_PeriodMs=1;
@@ -75,7 +73,7 @@ void Init_ADC(void)
 	Init_ADC_CCD_Struct.ADC_Adcx = ADC0;
 	Init_ADC_CCD_Struct.ADC_BitMode = SE_12BIT;
 	LPLD_ADC_Init(Init_ADC_CCD_Struct);
-	LPLD_ADC_Chn_Enable(ADC0, AD8); //CCD的AD端口 PTB0
+	LPLD_ADC_Chn_Enable(ADC0, AD12); //CCD的AD端口 PTB0
 }
 void Init_GPIO(void)
 {
@@ -123,11 +121,13 @@ void Init_FTM(void)
 	Init_FTM_Struct.FTM_Mode= FTM_MODE_QD;
 	Init_FTM_Struct.FTM_QdMode=QD_MODE_PHAB;
 	LPLD_FTM_Init(Init_FTM_Struct);
+	LPLD_FTM_QD_Enable(FTM1, PTB0, PTB1); //FTM1是左电机,FTM2是右电机
 
 	Init_FTM_Struct.FTM_Ftmx=FTM2;
 	Init_FTM_Struct.FTM_Mode= FTM_MODE_QD;
 	Init_FTM_Struct.FTM_QdMode=QD_MODE_PHAB;
 	LPLD_FTM_Init(Init_FTM_Struct);
+	LPLD_FTM_QD_Enable(FTM2, PTB18, PTB19);//开启正交解码模式
 }
 
 

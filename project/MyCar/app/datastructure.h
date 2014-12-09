@@ -16,29 +16,47 @@ typedef struct
 {
 	float AngSet; //设定的角度
 	float AngSpeedSet; //设定的角速度
-	//float SetPoint;
 	float Delta; //误差
-	float LastError; //E(k-1)
-	float PrevError; //E(k-2);
 
 	float Proportion; //比例常数
-	float Integral; //积分常数;
+	/*	float Integral; //积分常数;*/
 	float Derivative; //微分常数;
 
-//float LastError;
-//float PrevError;
-} IncPID_InitTypeDef; //增量PID的数据结构
+	//float LastError;
+	//float PrevError;
+} AngPID_InitTypeDef; //角度PID的数据结构
 
 typedef struct
 {
-	int L_Speed;
-	int R_Speed;
+	float SpeedSet; //设定的速度
+
+	float Kp;
+	float Ki;
+	float Kd;
+
+	float IntegralSum;//积分的误差
+	float ThisError;
+	/*float LastError;*/
+	float OutValue;//本次的输出控制量
+//	float LastOutValue;//上次的输出控制量
+
+	float OutMax;//积分饱和值
+	float OutMin;//积分饱和值
+
+}SpeedPID_TypeDef;
+typedef struct
+{
+	int RightMotorOutValue;
+	int LeftMotorOutValue;
 } CarControl_TypeDef; //用来控制电机
 
 typedef struct
 {
-	unsigned long int MotorRightSpeed; //通过编码器读出来
-	unsigned long int MotorLeftSpeed; //通过编码器读出来
+	int MotorCounterLeft; //通过编码器读出来
+	int MotorCounterRight; //通过编码器读出来
+	float LeftSpeed;
+	float RightSpeed;
+	float CarSpeed;//车子的速度
 	float CarAngle;
 	float CarAngSpeed;
 } CarInfo_TypeDef; //存当前车的信息
@@ -46,8 +64,9 @@ typedef struct
 typedef struct
 {
 	float AngControl_OutValue;
-	float Speed_RightOutValut;
-	float Speed_LeftOutValue;
+	float Dir_RightOutValut;
+	float Dir_LeftOutValue;
+	float SpeedOutValue;//
 } TempOfMotor_TypeDef;
 
 typedef struct
@@ -60,7 +79,7 @@ typedef struct
 }AngDataStruct; //第一页需要发送的数据
 
 void Flash_WriteTest(void);
-void Flash_DataToBuffer(float data,uint8 num);
+void Flash_DataToBuffer(float data, uint8 num);
 void Flash_WriteAllData(void);
 void Flash_ReadAllData(void);
 

@@ -20,7 +20,9 @@ AngDataStruct page1;
 
 PIT_InitTypeDef Code_Timer_Struct;
 
-extern IncPID_InitTypeDef Ang_PID; //用来调试PID参数
+extern AngPID_InitTypeDef Ang_PID; //用来调试PID参数
+extern SpeedPID_TypeDef Speed_PID;
+extern TempOfMotor_TypeDef TempValue; //临时存储角度和速度控制浮点变量的结构体
 unsigned int Code_Count = 0;
 
 void SaveAllDateToFlash(void);
@@ -46,15 +48,27 @@ void Debug_Timer_ReSet(void)
 
 void Struct_Init(void) //在这里调试初始参数,把准备好的参数发往调试器
 {
-	Ang_PID.Proportion = 0.7; //比例
-	Ang_PID.Integral = 0; //积分
-	Ang_PID.Derivative = 0.001; //微分
-	Ang_PID.AngSet = 40.05; //调试时调试这一行
+	Ang_PID.Proportion = 1.5; //比例
+	/*Ang_PID.Integral = 0; //积分*/
+	Ang_PID.Derivative = 0.01; //微分
+	Ang_PID.AngSet = 37.3; //调试时调试这一行
 	Ang_PID.AngSpeedSet = 0.00;
+	AngToMotorRatio = 90;
 //	Ang_PID.SetPoint=0;//设定的值
 //	Ang_PID.LastError=0;//上一次的误差
 //	Ang_PID.PrevError=0;//上上次的误差
 
+	Speed_PID.OutMax = 8000;
+	Speed_PID.OutMin = -8000;
+	Speed_PID.Kp = 0.7;
+	Speed_PID.Ki = 0;
+	Speed_PID.SpeedSet = 0;
+	Speed_PID.IntegralSum = 0;
+
+	TempValue.AngControl_OutValue = 0;
+	TempValue.Dir_RightOutValut = 0;
+	TempValue.Dir_LeftOutValue = 0;
+	TempValue.SpeedOutValue = 0;
 }
 
 void PagePrepare(void)

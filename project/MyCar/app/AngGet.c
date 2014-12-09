@@ -12,16 +12,19 @@ extern float angle_com, angle_dot_com;
 extern short acc_x, acc_y, acc_z, gyro_1, gyro_2;
 extern int gyro_avg;
 
-IncPID_InitTypeDef Ang_PID; //角度控制的PID结构体
+AngPID_InitTypeDef Ang_PID; //角度控制的PID结构体
 TempOfMotor_TypeDef TempValue; //临时存储角度和速度控制浮点变量的结构体
 float GravityAngle, GyroscopeAngleSpeed;
+
 float temp_x;
 int gyro_avg = 2360; //角速度AD平均值
 
+void AngleIntegration(float Anglespeed);
+
 void AngleGet(void)
 {
-	acc_x = LPLD_MMA8451_GetResult(MMA8451_STATUS_X_READY,
-			MMA8451_REG_OUTX_MSB);
+	acc_x = LPLD_MMA8451_GetResult(MMA8451_STATUS_Y_READY,
+			MMA8451_REG_OUTY_MSB);
 	temp_x = (float) acc_x / 4096.0;
 	if (temp_x > 1)
 		temp_x = 1;
@@ -31,19 +34,27 @@ void AngleGet(void)
 //				MMA8451_REG_OUTY_MSB);
 //	acc_z = LPLD_MMA8451_GetResult(MMA8451_STATUS_X_READY,
 //			MMA8451_REG_OUTZ_MSB);
-	//gyro_1 = LPLD_ADC_Get(ADC1, AD14);n
+	//gyro_1 = LPLD_ADC_Get(ADC1, AD14);
 	gyro_2 = (LPLD_ADC_Get(ADC1, AD15) - gyro_avg);
+	//AngleIntegration((float)(-gyro_2));//确定了当前的值合适
 	GyroscopeAngleSpeed = (float) gyro_2 * GYROSCOPE_ANGLE_RATIO;
 	GravityAngle = asinf(temp_x) * 57.3;
 
-//	complement_filter(GravityAngle, -GyroscopeAngleSpeed);
-//	CarInfo_Now.CarAngle = angle_com;
-//	CarInfo_Now.CarAngSpeed = angle_dot_com;
-	Kalman_Filter(GravityAngle, -GyroscopeAngleSpeed);
-	CarInfo_Now.CarAngSpeed = angle_dot;
-	CarInfo_Now.CarAngle = angle;
+	complement_filter(GravityAngle, -GyroscopeAngleSpeed);
+	CarInfo_Now.CarAngle = angle_com;
+	CarInfo_Now.CarAngSpeed = angle_dot_com;
+// 	Kalman_Filter(GravityAngle, -GyroscopeAngleSpeed);
+// 	CarInfo_Now.CarAngSpeed = angle_dot;
+// 	CarInfo_Now.CarAngle = angle;
 
 }
+
+/*void AngleIntegration(float Anglespeed)//对角速度积分得到角度确定GYROSCOPE_ANGLE_RATIO的值
+{
+	//float dt = 0.02;
+        static float AngleIntegraed = 0;
+	AngleIntegraed += Anglespeed*dt*GYROSCOPE_ANGLE_RATIO;
+}*/
 
 //函数说明：将单精度浮点数据转成4字节数据并存入指定地址 //gittest
 //附加说明：用户无需直接操作此函数

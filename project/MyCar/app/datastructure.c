@@ -2,7 +2,7 @@
 #include "common.h"
 #include "AngGet.h"
 
-extern IncPID_InitTypeDef Ang_PID;
+extern AngPID_InitTypeDef Ang_PID;
 extern float AngToMotorRatio;
 uint8 FlashReadBuffer[20]={0x01,0x01};
 uint8 FlashWriteBuffer[20]={0x01,0x01};
